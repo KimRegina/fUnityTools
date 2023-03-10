@@ -1,5 +1,5 @@
 {
-	"name": "com.regina.fUnityTools",
+	"name": "com.regina.funitytools",
 	"displayName": "fUnityTools",
 	"version": "0.0.1",
 	"unity": "2019.4",
@@ -7,7 +7,7 @@
 	"repository":{
 		"url": "https://github.com/KimRegina/fUnityTools.git",
 		"type": "git",
-		"revision": ""
+		"revision": "9b1deafb94d0d9e9d4bf7af5e5d503c98ee9b2a3"
 	},
 	"samples": [
 		{
