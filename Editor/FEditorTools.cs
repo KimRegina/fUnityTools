@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class FEditorTools
 {
-
-    [Menu("")]
+    [MenuItem("FUnityTools/TestMenu")]
     public void TestMenu()
     {
         Debug.Log("this is fEditorTools");
