@@ -1,0 +1,19 @@
+{
+	"name": "com.regina.fUnityTools",
+	"displayName": "fUnityTools",
+	"version": "0.0.1",
+	"unity": "2019.4",
+	"description": "this is unity tools for fgame",
+	"repository":{
+		"url": "https://github.com/KimRegina/fUnityTools.git",
+		"type": "git",
+		"revision": ""
+	},
+	"samples": [
+		{
+			"displayName": "fUnityToolsSample",
+			"description": "in assets",
+			"path": "Samples~/fUnityTools"
+		}
+	]
+}
