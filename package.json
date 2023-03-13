@@ -1,7 +1,7 @@
 {
 	"name": "com.regina.funitytools",
 	"displayName": "fUnityTools",
-	"version": "1.0.2",
+	"version": "1.0.4",
 	"unity": "2019.4",
 	"description": "this is unity tools for fgame",
 	"repository":{
