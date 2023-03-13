@@ -2,4 +2,4 @@
 
 <img src="doc/luoxiaohei.png" width="15%">
 
-    这是fUnityTools 开发分支
+    这是fUnityTools Package Release 分支
