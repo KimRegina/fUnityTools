@@ -7,9 +7,9 @@ using UnityEditor;
 // & (alt).
 ////********************************************************
 
-public class FEditorTools : Editor
+public class EditorMenu : Editor
 {
-    [MenuItem("FUnityTools ShortCuts/开关gameObjects显示 %&A")]
+    [MenuItem("Tools/ShortCuts/开关gameObjects显示 %&A")]
     public static void SetSelectionsActive()
     {
         var list = Selection.gameObjects;
@@ -20,4 +20,5 @@ public class FEditorTools : Editor
             list[i].SetActive(!isActive);
         }
     }
+    
 }
