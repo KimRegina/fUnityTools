@@ -9,7 +9,7 @@ namespace com.regina.fUnityTools.Editor
     /// <summary>
     /// 编辑器下文件信息
     /// </summary>
-    public struct EditorFile
+    public struct EditorAsset
     {
         public string assetPath;
         public string assetName;
@@ -55,7 +55,7 @@ namespace com.regina.fUnityTools.Editor
             return directoryInfo;
         }
 
-        public static EditorFile[] GetTopUnitySubDirectories(string assetPath)
+        public static EditorAsset[] GetTopUnitySubDirectories(string assetPath)
         {
             bool NeedIgnoreFile(string path)
             {
@@ -104,26 +104,39 @@ namespace com.regina.fUnityTools.Editor
         /// <param name="pattern"></param>
         /// <param name="onCheckIgnore">检查是否忽略文件Func<'文件path','是否忽略'></param>
         /// <returns></returns>
-        public static EditorFile[] GetAllAssetsPathByAssetDirectoryPath(string assetDirectoryPath,
+        public static EditorAsset[] GetAllAssetsPathByAssetDirectoryPath(string assetDirectoryPath,
             SearchOption searchOption = SearchOption.AllDirectories,
             Func<string, bool> onCheckIgnore = null)
         {
             FileSystemInfo[] fileSystemInfos =
                 GetAllFileSystemInfosByAssetDirectoryPath(assetDirectoryPath, searchOption);
-            List<EditorFile> list = new List<EditorFile>();
+            List<EditorAsset> list = new List<EditorAsset>();
             for (int i = 0; i < fileSystemInfos.Length; i++)
             {
                 FileSystemInfo fileSystemInfo = fileSystemInfos[i];
                 if (onCheckIgnore != null && onCheckIgnore(fileSystemInfo.FullName)) continue;
-                EditorFile editorFile = new EditorFile();
-                editorFile.assetName = fileSystemInfo.Name;
-                editorFile.assetPath = fileSystemInfo.FullName.Replace("\\", "/");
-                list.Add(editorFile);
+                EditorAsset editorAsset = ChangeFileSystemInfoToEditorAsset(fileSystemInfo);
+                list.Add(editorAsset);
             }
 
             return list.ToArray();
         }
 
+        /// <summary>
+        /// 将FileSystemInfo 转换成 EditorAsset
+        /// </summary>
+        /// <param name="fileSystemInfo"></param>
+        /// <returns></returns>
+        private static EditorAsset ChangeFileSystemInfoToEditorAsset(FileSystemInfo fileSystemInfo)
+        {
+            EditorAsset editorAsset = new EditorAsset();
+            editorAsset.assetName = fileSystemInfo.Name;
+            string assetPath = fileSystemInfo.FullName.Replace("\\", "/");
+            assetPath = assetPath.TrimStart(ApplicationDataPathNoAssets.ToCharArray());
+            editorAsset.assetPath = assetPath;
+            return editorAsset;
+        }
+        
         /// <summary>
         /// 获取Unity文件夹下所有文件，出去忽略文件
         /// </summary>
@@ -136,7 +149,7 @@ namespace com.regina.fUnityTools.Editor
             SearchOption searchOption = SearchOption.AllDirectories,
             Func<string, bool> onCheckIgnore = null)
         {
-            EditorFile[] files =
+            EditorAsset[] files =
                 GetAllAssetsPathByAssetDirectoryPath(assetDirectoryPath, searchOption, onCheckIgnore);
             UnityEngine.Object[] assets = new UnityEngine.Object[files.Length];
             for (int i = 0; i < files.Length; i++)
