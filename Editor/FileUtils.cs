@@ -24,42 +24,6 @@ namespace com.regina.fUnityTools.Editor
             }
         }
 
-        private static IgnoreConfig mIgnoreConfig;
-
-        /// <summary>
-        /// 获取文件忽略配置
-        /// </summary>
-        public static IgnoreConfig ignoreConfig
-        {
-            get
-            {
-                if (mIgnoreConfig == null)
-                    mIgnoreConfig =
-                        AssetDatabase.LoadAssetAtPath<IgnoreConfig>(
-                            "Assets/com.regina.fUnityTools/Editor/Config/IgnoreConfig.asset");
-                return mIgnoreConfig;
-            }
-        }
-
-        private static string[] mIgnoreExtensions;
-
-        /// <summary>
-        /// 忽略文件后缀列表
-        /// </summary>
-        public static string[] ignoreExtensions
-        {
-            get
-            {
-                if (mIgnoreExtensions == null)
-                {
-                    if (ignoreConfig != null) mIgnoreExtensions = ignoreConfig.extensions;
-                    else mIgnoreExtensions = Array.Empty<string>();
-                }
-
-                return mIgnoreExtensions;
-            }
-        }
-
         /// <summary>
         /// 判断Asset是否是文件夹
         /// </summary>
@@ -82,9 +46,15 @@ namespace com.regina.fUnityTools.Editor
             return directoryInfo;
         }
 
-        public static string[] GetAllUnitySubDirectories(string assetPath)
+        public static string[] GetTopUnitySubDirectories(string assetPath)
         {
-            return null;
+            bool IsDirectory(string path)
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                return directoryInfo.Exists;
+            }
+
+            return GetAllAssetsPathByAssetDirectoryPath(assetPath, SearchOption.TopDirectoryOnly, IsDirectory);
         }
 
         /// <summary>
@@ -93,10 +63,11 @@ namespace com.regina.fUnityTools.Editor
         /// <param name="assetDirectoryPath"></param>
         /// <param name="searchOption"></param>
         /// <param name="pattern"></param>
-        /// <param name="ignoreGlobalConfig">是否启用全局忽略配置</param>
+        /// <param name="onCheckIgnore">检查是否忽略文件Func<'文件path','是否忽略'></param>
         /// <returns></returns>
         public static string[] GetAllAssetsPathByAssetDirectoryPath(string assetDirectoryPath,
-            SearchOption searchOption = SearchOption.AllDirectories, string pattern = "*.*", bool ignoreGlobalConfig = true)
+            SearchOption searchOption = SearchOption.AllDirectories,
+            Func<string, bool> onCheckIgnore = null)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo($"{ApplicationDataPathNoAssets}/{assetDirectoryPath}");
             List<string> list = new List<string>();
@@ -106,11 +77,12 @@ namespace com.regina.fUnityTools.Editor
                 return list.ToArray();
             }
 
-            FileSystemInfo[] files = directoryInfo.GetFileSystemInfos(pattern, searchOption);
+            FileSystemInfo[] files = directoryInfo.GetFileSystemInfos("*", searchOption);
             for (int i = 0; i < files.Length; i++)
             {
-                string filePath = files[i].FullName.Replace("\\", "/");
-                if(ignoreGlobalConfig && IsIgnoreFile(filePath)) continue;
+                FileSystemInfo fileSystemInfo = files[i];
+                string filePath = fileSystemInfo.FullName.Replace("\\", "/");
+                if (onCheckIgnore != null && onCheckIgnore(filePath)) continue;
                 string assetPath = filePath.TrimStart(ApplicationDataPathNoAssets.ToCharArray());
                 list.Add(assetPath);
             }
@@ -118,18 +90,21 @@ namespace com.regina.fUnityTools.Editor
             return list.ToArray();
         }
 
+
         /// <summary>
         /// 获取Unity文件夹下所有文件，出去忽略文件
         /// </summary>
         /// <param name="assetDirectoryPath"></param>
         /// <param name="searchOption"></param>
         /// <param name="pattern"></param>
-        /// <param name="ignoreGlobalConfig"></param>
+        /// <param name="onCheckIgnore">检查是否忽略文件Func<'文件path','是否忽略'></param>
         /// <returns></returns>
         public static UnityEngine.Object[] GetAllAssetsByAssetDirectoryPath(string assetDirectoryPath,
-            SearchOption searchOption = SearchOption.AllDirectories,string pattern = "*.*",bool ignoreGlobalConfig = true)
+            SearchOption searchOption = SearchOption.AllDirectories,
+            Func<string, bool> onCheckIgnore = null)
         {
-            string[] files = GetAllAssetsPathByAssetDirectoryPath(assetDirectoryPath, searchOption,pattern,ignoreGlobalConfig);
+            string[] files =
+                GetAllAssetsPathByAssetDirectoryPath(assetDirectoryPath, searchOption, onCheckIgnore);
             UnityEngine.Object[] assets = new UnityEngine.Object[files.Length];
             for (int i = 0; i < files.Length; i++)
             {
@@ -137,17 +112,6 @@ namespace com.regina.fUnityTools.Editor
             }
 
             return assets;
-        }
-        
-        public static bool IsIgnoreFile(string filePath)
-        {
-            for (int i = 0; i < ignoreExtensions.Length; i++)
-            {
-                if (filePath.EndsWith(ignoreExtensions[i]))
-                    return true;
-            }
-
-            return false;
         }
     }
 }
