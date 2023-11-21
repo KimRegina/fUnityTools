@@ -15,7 +15,7 @@ namespace com.regina.fUnityTools.Editor
         public string assetName;
     }
 
-    public class FileUtils
+    public static class EditorFileUtils
     {
         private static string mApplicationDataPathNoAssets;
 

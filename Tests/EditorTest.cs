@@ -9,7 +9,7 @@ public class EditorTest
     [MenuItem("Test/TestFunc1")]
     public static void TestFunc1()
     {
-        var list = com.regina.fUnityTools.Editor.FileUtils.GetAllAssetsByAssetDirectoryPath(
+        var list = com.regina.fUnityTools.Editor.EditorFileUtils.GetAllAssetsByAssetDirectoryPath(
             "Assets/com.regina.fUnityTools/Editor/Config");
 
         for (int i = 0; i < list.Length; i++)
