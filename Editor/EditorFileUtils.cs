@@ -159,5 +159,23 @@ namespace com.regina.fUnityTools.Editor
 
             return assets;
         }
+        
+        public static void WriteAssetFile(string content, string assetPath)
+        {
+            string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
+            File.WriteAllText(filePath, content);
+            AssetDatabase.Refresh();
+        }
+
+        public static void DeleteAssetFile(string assetPath)
+        {
+            string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists) file.Delete();
+            else Debug.LogError($"{filePath} not existed");
+            AssetDatabase.Refresh();
+        }
+        
+        
     }
 }
