@@ -99,11 +99,7 @@ namespace com.regina.fUnityTools.Editor
         {
             DirectoryInfo directoryInfo = new DirectoryInfo($"{ApplicationDataPathNoAssets}/{assetDirectoryPath}");
             List<FileSystemInfo> list = new List<FileSystemInfo>();
-            if (!directoryInfo.Exists)
-            {
-                Debug.LogError($"{assetDirectoryPath} is not Unity Directory");
-                return list.ToArray();
-            }
+            if (!directoryInfo.Exists) return list.ToArray();
 
             FileSystemInfo[] files = directoryInfo.GetFileSystemInfos("*", searchOption);
             for (int i = 0; i < files.Length; i++)
