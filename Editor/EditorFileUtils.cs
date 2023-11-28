@@ -60,7 +60,7 @@ namespace com.regina.fUnityTools.Editor
         /// </summary>
         /// <param name="assetPath"></param>
         /// <returns></returns>
-        public static EditorAsset[] GetTopUnitySubDirectories(string assetPath)
+        public static EditorAsset[] GetTopDirectories(string assetPath)
         {
             bool NeedIgnoreFile(string path)
             {
@@ -71,6 +71,21 @@ namespace com.regina.fUnityTools.Editor
             return GetAllAssetsPathByAssetDirectoryPath(assetPath, SearchOption.TopDirectoryOnly, NeedIgnoreFile);
         }
 
+        /// <summary>
+        /// 获取除了 .meta 所有文件(夹)
+        /// </summary>
+        /// <param name="assetPath">asset路径</param>
+        /// <returns></returns>
+        public static EditorAsset[] GetTopUnityAssets(string assetPath)
+        {
+            bool NeedIgnoreFile(string path)
+            {
+                return path.EndsWith(".meta");
+            }
+
+            return GetAllAssetsPathByAssetDirectoryPath(assetPath, SearchOption.TopDirectoryOnly, NeedIgnoreFile);
+        }
+        
         /// <summary>
         /// 获取Unity文件夹下所有资源，出去忽略文件类型
         /// </summary>
