@@ -55,12 +55,17 @@ namespace com.regina.fUnityTools.Editor
             return directoryInfo;
         }
 
+        /// <summary>
+        /// 获取最上层所有文件夹
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <returns></returns>
         public static EditorAsset[] GetTopUnitySubDirectories(string assetPath)
         {
             bool NeedIgnoreFile(string path)
             {
-                DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                return !directoryInfo.Exists;
+                FileInfo fileInfo = new FileInfo(path);
+                return fileInfo.Exists;
             }
 
             return GetAllAssetsPathByAssetDirectoryPath(assetPath, SearchOption.TopDirectoryOnly, NeedIgnoreFile);
