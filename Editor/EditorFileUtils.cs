@@ -150,7 +150,7 @@ namespace com.regina.fUnityTools.Editor
             editorAsset.assetName = fileSystemInfo.Name;
             string assetPath = fileSystemInfo.FullName.Replace("\\", "/");
             //e.g. D:Folder/Assets/sample.prefab => Assets/sample.prefab
-            assetPath = assetPath.Substring(0,ApplicationDataPathNoAssets.Length + 1);
+            assetPath = assetPath.Substring(ApplicationDataPathNoAssets.Length + 1);
             editorAsset.assetPath = assetPath;
             return editorAsset;
         }
