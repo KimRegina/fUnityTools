@@ -19,14 +19,15 @@ namespace com.regina.fUnityTools.Editor
     {
         private static string mApplicationDataPathNoAssets;
 
-        //去掉Application.data的'Assets'
+        //去掉Application.data的'/Assets'
         public static string ApplicationDataPathNoAssets
         {
             get
             {
                 if (string.IsNullOrEmpty(mApplicationDataPathNoAssets))
                 {
-                    mApplicationDataPathNoAssets = Application.dataPath.TrimEnd("Assets".ToCharArray());
+                    mApplicationDataPathNoAssets =
+                        Application.dataPath.Substring(0, Application.dataPath.Length - "/Assets".Length);
                 }
 
                 return mApplicationDataPathNoAssets;
@@ -85,7 +86,7 @@ namespace com.regina.fUnityTools.Editor
 
             return GetAllAssetsPathByAssetDirectoryPath(assetPath, SearchOption.TopDirectoryOnly, NeedIgnoreFile);
         }
-        
+
         /// <summary>
         /// 获取Unity文件夹下所有资源，出去忽略文件类型
         /// </summary>
@@ -148,11 +149,12 @@ namespace com.regina.fUnityTools.Editor
             EditorAsset editorAsset = new EditorAsset();
             editorAsset.assetName = fileSystemInfo.Name;
             string assetPath = fileSystemInfo.FullName.Replace("\\", "/");
-            assetPath = assetPath.TrimStart(ApplicationDataPathNoAssets.ToCharArray());
+            //e.g. D:Folder/Assets/sample.prefab => Assets/sample.prefab
+            assetPath = assetPath.Substring(0,ApplicationDataPathNoAssets.Length + 1);
             editorAsset.assetPath = assetPath;
             return editorAsset;
         }
-        
+
         /// <summary>
         /// 获取Unity文件夹下所有文件，出去忽略文件
         /// </summary>
@@ -175,7 +177,7 @@ namespace com.regina.fUnityTools.Editor
 
             return assets;
         }
-        
+
         public static void WriteAssetFile(string content, string assetPath)
         {
             string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
@@ -191,7 +193,5 @@ namespace com.regina.fUnityTools.Editor
             else Debug.LogError($"{filePath} not existed");
             AssetDatabase.Refresh();
         }
-        
-        
     }
 }
