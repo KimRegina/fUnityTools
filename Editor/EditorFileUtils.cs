@@ -76,6 +76,7 @@ namespace com.regina.fUnityTools.Editor
         {
             List<string> list = new List<string>();
             DirectoryInfo directoryInfo = new DirectoryInfo($"{ApplicationDataPathNoAssets}/{directoryPath}");
+            if (!directoryInfo.Exists) return list.ToArray();
             FileSystemInfo[] fileSystemInfos = directoryInfo.GetFileSystemInfos(filter, SearchOption.TopDirectoryOnly);
             for (int i = 0; i < fileSystemInfos.Length; i++)
             {
