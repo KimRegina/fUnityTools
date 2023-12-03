@@ -26,28 +26,6 @@ namespace com.regina.fUnityTools.Editor
         }
 
         /// <summary>
-        /// 获取Asset文件夹信息
-        /// </summary>
-        /// <param name="assetPath"></param>
-        /// <returns></returns>
-        public static DirectoryInfo GetDirectoryInfo(string assetPath)
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo($"{ApplicationDataPathNoAssets}/{assetPath}");
-            return directoryInfo;
-        }
-
-        /// <summary>
-        /// 获取{assetPath}路径下第一层所有文件夹
-        /// </summary>
-        /// <param name="assetPath"></param>
-        /// <returns></returns>
-        public static string[] GetTopSubFolders(string assetPath)
-        {
-            if (AssetDatabase.IsValidFolder(assetPath)) return AssetDatabase.GetSubFolders(assetPath);
-            return Array.Empty<string>();
-        }
-
-        /// <summary>
         /// 获取Unity文件夹下所有资源，出去忽略文件类型
         /// </summary>
         /// <param name="assetDirectoryPath"></param>
@@ -72,6 +50,44 @@ namespace com.regina.fUnityTools.Editor
             }
 
             return list.ToArray();
+        }
+        
+        public static void WriteAssetFile(string content, string assetPath)
+        {
+            string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
+            File.WriteAllText(filePath, content);
+            AssetDatabase.Refresh();
+        }
+
+        public static void DeleteAssetFile(string assetPath)
+        {
+            string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists) file.Delete();
+            else Debug.LogError($"{filePath} not existed");
+            AssetDatabase.Refresh();
+        }
+        
+        /// <summary>
+        /// 获取Asset文件夹信息
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <returns></returns>
+        public static DirectoryInfo GetDirectoryInfo(string assetPath)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo($"{ApplicationDataPathNoAssets}/{assetPath}");
+            return directoryInfo;
+        }
+
+        /// <summary>
+        /// 获取{assetPath}路径下第一层所有文件夹
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <returns></returns>
+        public static string[] GetTopSubFolders(string assetPath)
+        {
+            if (AssetDatabase.IsValidFolder(assetPath)) return AssetDatabase.GetSubFolders(assetPath);
+            return Array.Empty<string>();
         }
 
         /// <summary>
@@ -155,22 +171,6 @@ namespace com.regina.fUnityTools.Editor
             }
 
             return labels.ToArray();
-        }
-
-        public static void WriteAssetFile(string content, string assetPath)
-        {
-            string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
-            File.WriteAllText(filePath, content);
-            AssetDatabase.Refresh();
-        }
-
-        public static void DeleteAssetFile(string assetPath)
-        {
-            string filePath = $"{ApplicationDataPathNoAssets}/{assetPath}";
-            FileInfo file = new FileInfo(filePath);
-            if (file.Exists) file.Delete();
-            else Debug.LogError($"{filePath} not existed");
-            AssetDatabase.Refresh();
         }
     }
 }
