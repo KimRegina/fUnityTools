@@ -124,11 +124,12 @@ namespace com.regina.fUnityTools.Editor
         /// <returns></returns>
         public static T[] FindAllAssets<T>(string filter, params string[] directoriesPath) where T : UnityEngine.Object
         {
-            string[] assetsPath = FindAllAssetsPath(filter, directoriesPath);
+            string[] guids = FindAllAssetsPath(filter, directoriesPath);
             List<T> assetList = new List<T>();
-            for (int i = 0; i < assetsPath.Length; i++)
+            for (int i = 0; i < guids.Length; i++)
             {
-                T target = AssetDatabase.LoadAssetAtPath<T>(assetsPath[i]);
+                string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
+                T target = AssetDatabase.LoadAssetAtPath<T>(assetPath);
                 if (target == null) continue;
                 assetList.Add(target);
             }
