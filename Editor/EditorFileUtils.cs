@@ -26,17 +26,6 @@ namespace com.regina.fUnityTools.Editor
         }
 
         /// <summary>
-        /// 判断Asset是否是文件夹
-        /// </summary>
-        /// <param name="assetPath">Asset路径</param>
-        /// <returns>是否Unity文件夹</returns>
-        public static bool IsDirectory(string assetPath)
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo($"{ApplicationDataPathNoAssets}/{assetPath}");
-            return directoryInfo.Exists;
-        }
-
-        /// <summary>
         /// 获取Asset文件夹信息
         /// </summary>
         /// <param name="assetPath"></param>
@@ -48,19 +37,14 @@ namespace com.regina.fUnityTools.Editor
         }
 
         /// <summary>
-        /// 获取最上层所有文件夹
+        /// 获取{assetPath}路径下第一层所有文件夹
         /// </summary>
         /// <param name="assetPath"></param>
         /// <returns></returns>
-        public static string[] GetTopDirectoryPaths(string assetPath)
+        public static string[] GetTopSubFolders(string assetPath)
         {
-            bool NeedIgnoreFile(string path)
-            {
-                FileInfo fileInfo = new FileInfo(path);
-                return fileInfo.Exists;
-            }
-
-            return GetTopAssetPaths(assetPath, NeedIgnoreFile);
+            if (AssetDatabase.IsValidFolder(assetPath)) return AssetDatabase.GetSubFolders(assetPath);
+            return Array.Empty<string>();
         }
 
         /// <summary>
@@ -136,6 +120,41 @@ namespace com.regina.fUnityTools.Editor
             }
 
             return assetList.ToArray();
+        }
+
+        /// <summary>
+        /// 获取Asset的所有标签
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <returns></returns>
+        public static string[] GetLabels(string assetPath)
+        {
+            GUID guid = AssetDatabase.GUIDFromAssetPath(assetPath);
+            if (guid.Empty()) return Array.Empty<string>();
+            return AssetDatabase.GetLabels(guid);
+        }
+
+        /// <summary>
+        /// 获取Asset上层所有标签
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <returns></returns>
+        public static string[] GetParentLabels(string assetPath)
+        {
+            List<string> labels = new List<string>();
+            int lastIndex = assetPath.LastIndexOf('/');
+            if (lastIndex <= 0) return labels.ToArray();
+            string parent = assetPath.Substring(0, lastIndex);
+            while (!parent.Equals("Assets"))
+            {
+                string[] tmpLabels = GetLabels(parent);
+                labels.AddRange(tmpLabels);
+                lastIndex = parent.LastIndexOf('/');
+                if (lastIndex <= 0) break;
+                parent = parent.Substring(0, lastIndex);
+            }
+
+            return labels.ToArray();
         }
 
         public static void WriteAssetFile(string content, string assetPath)
